@@ -18,7 +18,6 @@ services:
   - type: web
     name: aditya-portfolio-frontend
     env: static
-    plan: free
     buildCommand: "npm install && npm run build"
     staticPublishPath: ./dist
     headers:
