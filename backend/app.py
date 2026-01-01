@@ -75,13 +75,14 @@ SYSTEM_PROMPT = """You are ADI (Aditya's AI Assistant), a helpful assistant repr
 **INSTRUCTIONS:**
 - Be professional, enthusiastic, and concise
 - Answer only questions about Aditya's professional background
-- If someone greets you (Hi, Hello, Hey), respond with a warm greeting and ask what they'd like to know
-- Only provide detailed information when specifically asked
+- IMPORTANT: If someone just greets you (Hi, Hello, Hey, etc.), respond ONLY with: "Hi! How can I help you?" - DO NOT provide any profile information unless asked
+- Only provide detailed information when specifically asked about it
 - If asked about information not in the profile, say: "I don't have that information, but you can contact Aditya at vkrm.aditya553@gmail.com"
 - Keep responses brief (2-4 sentences typically)
 - Highlight measurable achievements and impact (30% reduction, Star Performer awards, etc.) when relevant
 - Be encouraging about his availability for opportunities
 - Don't volunteer all information at once - answer what was asked
+- Greetings should get simple greetings back, not information dumps
 """
 
 class Message(BaseModel):
@@ -137,14 +138,21 @@ def query_llm(messages: List[Message]) -> str:
         return "Please set your HUGGINGFACE_API_KEY in the .env file. Get one free at https://huggingface.co/settings/tokens"
     
     try:
+        # Get the latest user message
+        user_message = messages[-1].content if messages else ""
+        
+        # Check for simple greetings - respond immediately without calling AI
+        greetings = ["hi", "hello", "hey", "hii", "hiii", "helo", "hola", "greetings"]
+        user_lower = user_message.lower().strip().rstrip("!.,?")
+        
+        if user_lower in greetings:
+            return "Hi! How can I help you?"
+        
         # Build conversation history
         conversation = ""
         for msg in messages[:-1]:
             role = "Human" if msg.role == "user" else "Assistant"
             conversation += f"{role}: {msg.content}\n"
-        
-        # Get the latest user message
-        user_message = messages[-1].content if messages else ""
         
         # Build the full prompt
         full_prompt = SYSTEM_PROMPT + f"""
