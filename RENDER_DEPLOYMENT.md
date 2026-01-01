@@ -6,7 +6,7 @@ Your portfolio is ready to deploy! Follow these simple steps.
 
 - ✅ GitHub repository (already pushed)
 - ✅ Render account (free at https://render.com)
-- ✅ Hugging Face API key: `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`
+- ✅ Hugging Face API key
 - ✅ EmailJS credentials (already in .env.local)
 
 ---
@@ -39,7 +39,7 @@ Your portfolio is ready to deploy! Follow these simple steps.
    For **aditya-portfolio-backend**:
    - Click "Add Environment Variable"
    - Key: `HUGGINGFACE_API_KEY`
-   - Value: `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`
+   - Value: 
    - Click "Save"
 
 6. **Click "Apply"** at the bottom
@@ -80,7 +80,7 @@ If you prefer manual setup:
    Instance Type: Free
    ```
 4. Add environment variable:
-   - `HUGGINGFACE_API_KEY` = `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`
+   - `HUGGINGFACE_API_KEY` 
 5. Click **"Create Web Service"**
 6. **Copy the backend URL** (e.g., `https://aditya-portfolio-backend.onrender.com`)
 
