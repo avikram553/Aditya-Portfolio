@@ -14,7 +14,15 @@ app = FastAPI(title="Portfolio Chatbot API - Llama 3.1 + LangChain")
 # Enable CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080", "http://localhost:8081", "http://localhost:5173", "http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:8080",
+        "http://localhost:8081",
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://*.onrender.com",
+        "https://aditya-portfolio-frontend.onrender.com",
+        "https://aditya-portfolio-frontend-latest.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

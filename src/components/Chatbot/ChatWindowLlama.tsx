@@ -26,11 +26,14 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
   const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Backend URL - use environment variable in production, localhost in development
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+
   // Check backend status
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        const response = await fetch('http://localhost:8000/');
+        const response = await fetch(`${BACKEND_URL}/`);
         if (response.ok) {
           setBackendStatus('online');
         } else {
@@ -44,7 +47,7 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
     checkBackend();
     const interval = setInterval(checkBackend, 10000); // Check every 10 seconds
     return () => clearInterval(interval);
-  }, []);
+  }, [BACKEND_URL]);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -64,7 +67,7 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch(`${BACKEND_URL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
