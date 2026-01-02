@@ -22,6 +22,12 @@ services:
     envVars:
       - key: VITE_BACKEND_URL
         value: https://aditya-portfolio-backend-izud.onrender.com
+      - key: VITE_EMAILJS_SERVICE_ID
+        value: service_g47igei
+      - key: VITE_EMAILJS_TEMPLATE_ID
+        value: template_6w7wjoc
+      - key: VITE_EMAILJS_PUBLIC_KEY
+        value: x4ReHtsyLnxxahEbM
     headers:
       - path: /*
         name: Cache-Control
