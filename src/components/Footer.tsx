@@ -1,4 +1,4 @@
-import { Github, Linkedin, Twitter, Mail } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -6,7 +6,6 @@ export const Footer = () => {
   const socialLinks = [
     { icon: Github, href: "https://github.com/avikram553", label: "GitHub" },
     { icon: Linkedin, href: "https://linkedin.com/in/avikram553", label: "LinkedIn" },
-    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
     { icon: Mail, href: "mailto:vkrm.aditya553@gmail.com", label: "Email" },
   ];
 

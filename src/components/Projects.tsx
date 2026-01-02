@@ -17,18 +17,26 @@ const projects = [
     description: "Machine learning model for automotive predictive maintenance",
     image: "🔧",
     tags: ["Machine Learning", "Python", "Predictive Analytics", "Automotive"],
-    details: "Developed a machine-learning model to predict Diagnostic Module Tank Leakage (DMTL) pump replacement times at Bosch, significantly enhancing maintenance strategies and reducing downtime in automotive systems. Applied deep understanding of automotive sensors and actuators to optimize embedded systems.",
-    github: "#",
-    demo: "#",
+    details: "Developed a machine-learning model to predict Diagnostic Module Tank Leakage (DMTL) pump replacement times at Bosch, achieving 30% reduction in maintenance downtime. Applied deep understanding of automotive sensors and actuators to optimize embedded systems. Built end-to-end ML pipeline: data collection from ECU logs, feature engineering, model training with scikit-learn, and deployment to production environment.",
+    github: null,
+    demo: null,
+    isProprietaryWork: true,
+    companyLogo: "/assets/bosch-logo.png",
+    caseStudyLink: "#contact",
+    nda: "Proprietary work developed at Bosch Global Software Technologies"
   },
   {
     title: "VS Code MISRA Extension",
     description: "AI-powered code compliance tool with Copilot integration",
     image: "💻",
-    tags: ["VS Code", "GitHub Copilot", "Code Quality", "MISRA"],
-    details: "Created a Visual Studio Code extension integrated with GitHub Copilot to provide real-time MISRA-compliant coding suggestions, ensuring adherence to automotive industry coding standards. This tool significantly improved code quality and reduced review time for embedded systems development.",
-    github: "#",
-    demo: "#",
+    tags: ["VS Code", "GitHub Copilot", "Code Quality", "MISRA-C"],
+    details: "Created a Visual Studio Code extension integrated with GitHub Copilot to provide real-time MISRA-C compliant coding suggestions, ensuring adherence to automotive industry coding standards. Reduced code review time by 40% and improved first-pass compliance rate by 65% across the development team. Utilized VS Code Extension API, TypeScript, and GitHub Copilot API.",
+    github: null,
+    demo: null,
+    isProprietaryWork: true,
+    companyLogo: "/assets/bosch-logo.png",
+    caseStudyLink: "#contact",
+    nda: "Proprietary work developed at Bosch Global Software Technologies"
   },
   {
     title: "Algorithm Visualizer",
@@ -36,7 +44,7 @@ const projects = [
     image: "📊",
     tags: ["Python", "Flask", "Visualization", "Education"],
     details: "Designed a visual tool demonstrating sorting algorithm performance with adjustable parameters. Built using Python and Flask, this educational tool helps understand algorithm complexity and performance characteristics through interactive visualizations and comparative analysis.",
-    github: "#",
+    github: "https://github.com/avikram553/Algorithm-Visualizer",
     demo: "#",
   },
   {
@@ -118,6 +126,14 @@ export const Projects = () => {
             </DialogDescription>
           </DialogHeader>
           
+          {selectedProject?.isProprietaryWork && selectedProject?.nda && (
+            <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+              <p className="text-sm text-amber-800 dark:text-amber-200">
+                <span className="font-semibold">Note:</span> {selectedProject.nda}
+              </p>
+            </div>
+          )}
+          
           <div className="mt-4">
             <h4 className="font-semibold mb-2">Technologies Used:</h4>
             <div className="flex flex-wrap gap-2">
@@ -133,18 +149,35 @@ export const Projects = () => {
           </div>
 
           <div className="flex gap-4 mt-6">
-            <Button asChild className="flex-1">
-              <a href={selectedProject?.github} target="_blank" rel="noopener noreferrer">
+            {selectedProject?.github ? (
+              <Button asChild className="flex-1">
+                <a href={selectedProject.github} target="_blank" rel="noopener noreferrer">
+                  <Github className="mr-2 h-4 w-4" />
+                  View Code
+                </a>
+              </Button>
+            ) : selectedProject?.isProprietaryWork ? (
+              <Button disabled className="flex-1" title="Source code not available for proprietary work">
                 <Github className="mr-2 h-4 w-4" />
-                View Code
-              </a>
-            </Button>
-            <Button asChild variant="outline" className="flex-1">
-              <a href={selectedProject?.demo} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Live Demo
-              </a>
-            </Button>
+                Private Repository
+              </Button>
+            ) : null}
+            
+            {selectedProject?.demo ? (
+              <Button asChild variant="outline" className="flex-1">
+                <a href={selectedProject.demo} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Live Demo
+                </a>
+              </Button>
+            ) : selectedProject?.isProprietaryWork && selectedProject?.caseStudyLink ? (
+              <Button asChild variant="outline" className="flex-1">
+                <a href={selectedProject.caseStudyLink}>
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Discuss Project
+                </a>
+              </Button>
+            ) : null}
           </div>
         </DialogContent>
       </Dialog>
