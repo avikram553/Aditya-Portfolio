@@ -12,18 +12,11 @@ load_dotenv()
 
 app = FastAPI(title="Portfolio Chatbot API - Llama 3.1 + LangChain")
 
-# Enable CORS for React frontend
+# Enable CORS for React frontend - Allow all origins for production compatibility
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8080",
-        "http://localhost:8081",
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "https://aditya-portfolio-frontend.onrender.com",
-        "https://aditya-portfolio-frontend-latest.onrender.com"
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=False,  # Must be False when allow_origins is ["*"]
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -216,16 +209,17 @@ Answer (keep it brief and professional):"""
 async def root():
     """Health check endpoint"""
     key_status = "configured" if HUGGINGFACE_API_KEY else "missing"
-    key_preview = f"{HUGGINGFACE_API_KEY[:10]}..." if HUGGINGFACE_API_KEY else "not set"
-    
+    key_preview = f"{HUGGINGFACE_API_KEY[:10]}..." if HUGGINGFACE_API_KEY and len(HUGGINGFACE_API_KEY) >= 10 else "not set"
+
     return {
-        "status": "online",
+        "status": "ok",
         "service": "Portfolio Chatbot API",
         "model": MODEL_NAME,
         "framework": "Hugging Face Inference API + FastAPI",
         "api_key_status": key_status,
         "api_key_preview": key_preview,
-        "python_version": sys.version
+        "python_version": sys.version.split()[0],
+        "message": "Backend is running successfully" if HUGGINGFACE_API_KEY else "Backend running but HUGGINGFACE_API_KEY not configured"
     }
 
 @app.get("/health")
