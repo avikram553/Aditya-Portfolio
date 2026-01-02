@@ -21,7 +21,7 @@ services:
     staticPublishPath: ./dist
     envVars:
       - key: VITE_BACKEND_URL
-        value: https://aditya-portfolio-backend.onrender.com
+        value: https://aditya-portfolio-backend-izud.onrender.com
     headers:
       - path: /*
         name: Cache-Control
