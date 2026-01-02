@@ -29,6 +29,12 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
   // Backend URL - use environment variable in production, localhost in development
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
 
+  // Log backend URL on mount for debugging
+  useEffect(() => {
+    console.log('Chatbot - Backend URL:', BACKEND_URL);
+    console.log('Chatbot - Environment:', import.meta.env.MODE);
+  }, []);
+
   // Check backend status
   useEffect(() => {
     const checkBackend = async () => {
@@ -67,6 +73,7 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
     setIsLoading(true);
 
     try {
+      console.log('Sending message to:', `${BACKEND_URL}/api/chat`);
       const response = await fetch(`${BACKEND_URL}/api/chat`, {
         method: 'POST',
         headers: {
@@ -77,11 +84,17 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
         }),
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Response error:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('Response data:', data);
+
       const assistantMessage: Message = {
         role: 'assistant',
         content: data.message || "I apologize, but I couldn't generate a response. Please try again.",
@@ -89,10 +102,21 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Chat error:', error);
+
+      let errorContent = "I'm having trouble connecting to the AI backend.";
+
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        errorContent = `Cannot connect to backend at ${BACKEND_URL}. This might be a CORS issue or the backend is not accessible. Please check the browser console for details.`;
+      } else if (error instanceof Error && error.message.includes('status')) {
+        errorContent = `Backend returned an error: ${error.message}. Please check the backend logs for details.`;
+      }
+
+      errorContent += " You can contact Aditya directly at vkrm.aditya553@gmail.com";
+
       const errorMessage: Message = {
         role: 'assistant',
-        content: "I'm having trouble connecting to the AI backend. Please make sure the backend server is running (cd backend && uvicorn app:app --reload). If the issue persists, you can contact Aditya directly at vkrm.aditya553@gmail.com",
+        content: errorContent,
       };
       setMessages((prev) => [...prev, errorMessage]);
       setBackendStatus('offline');

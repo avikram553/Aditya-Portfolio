@@ -13,16 +13,10 @@ load_dotenv()
 app = FastAPI(title="Portfolio Chatbot API - Llama 3.1 + LangChain")
 
 # Enable CORS for React frontend
+# Allow localhost for development and any .onrender.com subdomain for production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:8080",
-        "http://localhost:8081",
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "https://aditya-portfolio-frontend.onrender.com",
-        "https://aditya-portfolio-frontend-latest.onrender.com"
-    ],
+    allow_origin_regex=r"^https://.*\.onrender\.com$|^http://localhost:\d+$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -217,7 +211,7 @@ async def root():
     """Health check endpoint"""
     key_status = "configured" if HUGGINGFACE_API_KEY else "missing"
     key_preview = f"{HUGGINGFACE_API_KEY[:10]}..." if HUGGINGFACE_API_KEY else "not set"
-    
+
     return {
         "status": "online",
         "service": "Portfolio Chatbot API",
@@ -225,7 +219,8 @@ async def root():
         "framework": "Hugging Face Inference API + FastAPI",
         "api_key_status": key_status,
         "api_key_preview": key_preview,
-        "python_version": sys.version
+        "python_version": sys.version,
+        "cors": "Enabled for all *.onrender.com domains and localhost"
     }
 
 @app.get("/health")
