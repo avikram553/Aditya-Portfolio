@@ -45,7 +45,7 @@ const projects = [
     image: "🔐",
     tags: ["Python", "Security", "Signal Processing", "Encryption"],
     details: "Developed a secure system for confidential data transmission by embedding encrypted information within images. This project combines signal processing techniques with modern encryption methods for covert communication, ensuring data security and minimal visual impact on carrier images.",
-    github: "#",
+    github: "https://github.com/avikram553/crypto-stego",
     demo: "#",
   },
 ];
