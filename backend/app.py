@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import os
+import sys
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
 
@@ -19,7 +20,6 @@ app.add_middleware(
         "http://localhost:8081",
         "http://localhost:5173",
         "http://localhost:3000",
-        "https://*.onrender.com",
         "https://aditya-portfolio-frontend.onrender.com",
         "https://aditya-portfolio-frontend-latest.onrender.com"
     ],
@@ -30,6 +30,15 @@ app.add_middleware(
 
 # Hugging Face API configuration
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY", "")
+
+# Validate API key on startup
+if not HUGGINGFACE_API_KEY:
+    print("WARNING: HUGGINGFACE_API_KEY not found in environment variables!")
+    print("Get your free API key at: https://huggingface.co/settings/tokens")
+elif len(HUGGINGFACE_API_KEY) < 20:
+    print("WARNING: HUGGINGFACE_API_KEY appears to be invalid (too short)")
+else:
+    print(f"✓ Hugging Face API key loaded: {HUGGINGFACE_API_KEY[:10]}...")
 
 # Using Mistral 7B - More reliable and widely available on Hugging Face
 # Note: Llama models may require special access or paid inference
@@ -106,11 +115,15 @@ class ChatResponse(BaseModel):
 def query_huggingface(prompt: str) -> str:
     """Query Hugging Face API using InferenceClient"""
     if not HUGGINGFACE_API_KEY:
-        return "Please set your HUGGINGFACE_API_KEY in the .env file."
+        error_msg = "HUGGINGFACE_API_KEY not configured. Please set it in environment variables."
+        print(f"ERROR: {error_msg}")
+        return error_msg
     
     try:
-        # Initialize Inference Client
-        client = InferenceClient(token=HUGGINGFACE_API_KEY)
+        print(f"Querying Hugging Face model: {MODEL_NAME}")
+        
+        # Initialize Inference Client with timeout
+        client = InferenceClient(token=HUGGINGFACE_API_KEY, timeout=60)
         
         # Use chat_completion for conversational models
         response = client.chat_completion(
@@ -124,21 +137,29 @@ def query_huggingface(prompt: str) -> str:
         # Extract the response text
         if response.choices and len(response.choices) > 0:
             message = response.choices[0].message.content
+            print(f"✓ Received response from Hugging Face ({len(message) if message else 0} chars)")
             return message.strip() if message else "No response generated."
         else:
+            print("WARNING: No choices in Hugging Face response")
             return "No response generated."
             
     except Exception as e:
         error_msg = str(e)
-        print(f"Error querying Hugging Face: {error_msg}")
+        print(f"ERROR querying Hugging Face: {error_msg}")
         
-        # Check if it's a model loading error
+        # Provide helpful error messages
         if "loading" in error_msg.lower():
-            return "The AI model is currently loading. Please try again in a moment (usually takes 20-30 seconds)."
+            return "The AI model is currently loading. Please try again in 20-30 seconds."
         elif "rate" in error_msg.lower() or "limit" in error_msg.lower():
             return "Rate limit reached. Please wait a moment and try again."
+        elif "401" in error_msg or "unauthorized" in error_msg.lower():
+            return "API key authentication failed. Please check your Hugging Face API key."
+        elif "403" in error_msg or "forbidden" in error_msg.lower():
+            return "Access denied. You may need to accept the model's terms on Hugging Face."
+        elif "timeout" in error_msg.lower():
+            return "Request timed out. The model may be busy. Please try again."
         else:
-            return f"Error: {error_msg}"
+            return f"Error connecting to AI model: {error_msg}"
 
 def query_llm(messages: List[Message]) -> str:
     """Query LLM with conversation context"""
@@ -194,12 +215,27 @@ Answer (keep it brief and professional):"""
 @app.get("/")
 async def root():
     """Health check endpoint"""
+    key_status = "configured" if HUGGINGFACE_API_KEY else "missing"
+    key_preview = f"{HUGGINGFACE_API_KEY[:10]}..." if HUGGINGFACE_API_KEY else "not set"
+    
     return {
         "status": "online",
         "service": "Portfolio Chatbot API",
         "model": MODEL_NAME,
         "framework": "Hugging Face Inference API + FastAPI",
-        "api_key_configured": bool(HUGGINGFACE_API_KEY)
+        "api_key_status": key_status,
+        "api_key_preview": key_preview,
+        "python_version": sys.version
+    }
+
+@app.get("/health")
+async def health():
+    """Detailed health check"""
+    return {
+        "status": "healthy",
+        "timestamp": __import__("datetime").datetime.now().isoformat(),
+        "huggingface_key_configured": bool(HUGGINGFACE_API_KEY),
+        "model": MODEL_NAME
     }
 
 @app.post("/api/chat", response_model=ChatResponse)
