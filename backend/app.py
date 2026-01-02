@@ -114,10 +114,15 @@ def query_huggingface(prompt: str) -> str:
     
     try:
         print(f"Querying Hugging Face model: {MODEL_NAME}")
-        
-        # Initialize Inference Client with timeout
-        client = InferenceClient(token=HUGGINGFACE_API_KEY, timeout=60)
-        
+
+        # Initialize Inference Client with new router endpoint
+        # Using the new https://router.huggingface.co endpoint (api-inference.huggingface.co is deprecated)
+        client = InferenceClient(
+            token=HUGGINGFACE_API_KEY,
+            timeout=60,
+            base_url="https://router.huggingface.co"
+        )
+
         # Use chat_completion for conversational models
         response = client.chat_completion(
             messages=[{"role": "user", "content": prompt}],
@@ -141,7 +146,9 @@ def query_huggingface(prompt: str) -> str:
         print(f"ERROR querying Hugging Face: {error_msg}")
         
         # Provide helpful error messages
-        if "loading" in error_msg.lower():
+        if "410" in error_msg or "gone" in error_msg.lower():
+            return "Hugging Face API endpoint has been updated. Please redeploy the backend with the latest code."
+        elif "loading" in error_msg.lower():
             return "The AI model is currently loading. Please try again in 20-30 seconds."
         elif "rate" in error_msg.lower() or "limit" in error_msg.lower():
             return "Rate limit reached. Please wait a moment and try again."
