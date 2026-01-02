@@ -34,9 +34,9 @@ elif len(HUGGINGFACE_API_KEY) < 20:
 else:
     print(f"✓ Hugging Face API key loaded: {HUGGINGFACE_API_KEY[:10]}...")
 
-# Using Mistral 7B - More reliable and widely available on Hugging Face
-# Note: Llama models may require special access or paid inference
-MODEL_NAME = "mistralai/Mistral-7B-Instruct-v0.2"
+# Using Qwen 2.5 - Reliable and widely available on Hugging Face Inference API
+# Qwen2.5-7B-Instruct is a supported chat model
+MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
 
 # System prompt with Aditya's information
 SYSTEM_PROMPT = """You are ADI (Aditya's AI Assistant), a helpful assistant representing Aditya Vikram in his portfolio. Answer questions professionally and enthusiastically.
@@ -117,7 +117,11 @@ def query_huggingface(prompt: str) -> str:
         print(f"Querying Hugging Face model: {MODEL_NAME}")
         
         # Initialize Inference Client with timeout
-        client = InferenceClient(token=HUGGINGFACE_API_KEY, timeout=60)
+        # The client will automatically use the correct endpoint (router.huggingface.co)
+        client = InferenceClient(
+            token=HUGGINGFACE_API_KEY, 
+            timeout=60
+        )
         
         # Use chat_completion for conversational models
         response = client.chat_completion(
