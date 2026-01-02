@@ -8,7 +8,10 @@ export const About = () => {
   });
 
   return (
-    <section id="about" className="py-20 lg:py-32">
+    <section 
+      id="about" 
+      className="py-20 lg:py-32"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
@@ -17,7 +20,14 @@ export const About = () => {
           transition={{ duration: 0.8 }}
           className="max-w-6xl mx-auto"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-12 text-center">
+          <h2 
+            className="text-5xl lg:text-6xl font-bold mb-12 text-center"
+            style={{ 
+              letterSpacing: '-0.02em',
+              color: '#1a1a1a',
+              fontWeight: 700
+            }}
+          >
             About Me
           </h2>
 
@@ -41,21 +51,60 @@ export const About = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="space-y-4"
+              className="space-y-6"
             >
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Hey 👋 I'm a Dynamic Senior Software Engineer with over 3.5 years of experience in 
-                developing innovative software solutions. Currently pursuing my Master's in Web Engineering 
-                at Technische Universität Chemnitz, Germany.
+              <p 
+                className="text-lg leading-relaxed"
+                style={{
+                  lineHeight: '1.8',
+                  fontWeight: 400,
+                  color: '#2c3e50'
+                }}
+              >
+                From debugging{" "}
+                <span style={{ fontWeight: 600, color: '#2196F3', cursor: 'pointer' }} className="transition-colors hover:text-[#1976D2]">
+                  automotive CAN protocols
+                </span>{" "}
+                to training{" "}
+                <span style={{ fontWeight: 600, color: '#2196F3', cursor: 'pointer' }} className="transition-colors hover:text-[#1976D2]">
+                  neural networks
+                </span>
+                —I've evolved from <em style={{ fontStyle: 'italic', fontWeight: 500, color: '#34495e' }}>Embedded Software Engineer</em> to{" "}
+                <em style={{ fontStyle: 'italic', fontWeight: 500, color: '#34495e' }}>AI enthusiast</em>. My journey started at Bosch developing ECU systems, but creating a machine learning model that predicted maintenance failures{" "}
+                <span style={{ fontWeight: 700, color: '#FF6B35' }}>
+                  (30% downtime reduction)
+                </span>{" "}
+                ignited my AI passion.
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                I'm proficient in machine learning, predictive maintenance, and embedded systems, 
-                excelling at enhancing operational efficiency and safety in automotive technologies. 
-                My expertise spans Python, FastAPI, Flask, Django, and cloud deployments on AWS and Azure.
+              <p 
+                className="text-lg leading-relaxed"
+                style={{
+                  lineHeight: '1.8',
+                  fontWeight: 400,
+                  color: '#2c3e50'
+                }}
+              >
+                Now pursuing my Master's in Web Engineering at TU Chemnitz while researching{" "}
+                <span style={{ fontWeight: 600, color: '#2196F3', cursor: 'pointer' }} className="transition-colors hover:text-[#1976D2]">
+                  LLM-based semantic matching
+                </span>, I combine automotive domain knowledge with modern AI skills{" "}
+                <span style={{ fontWeight: 600, color: '#2196F3', cursor: 'pointer' }} className="transition-colors hover:text-[#1976D2]">
+                  (PyTorch, TensorFlow, LangChain)
+                </span>. Seeking AI/ML roles where my unique background in{" "}
+                <em style={{ fontStyle: 'italic', fontWeight: 500, color: '#34495e' }}>safety-critical systems</em> and{" "}
+                <em style={{ fontStyle: 'italic', fontWeight: 500, color: '#34495e' }}>production ML</em> can drive innovation.
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                When I'm not coding, you can find me on the badminton court or exploring the latest 
-                advancements in AI and machine learning. I absolutely love all things to do with AI and innovation.
+              <p 
+                className="text-lg leading-relaxed"
+                style={{
+                  lineHeight: '1.8',
+                  fontWeight: 400,
+                  color: '#2c3e50'
+                }}
+              >
+                <span style={{ fontWeight: 700, color: '#FF6B35' }}>
+                  Star Performer for 8 consecutive quarters.
+                </span>
               </p>
             </motion.div>
           </div>

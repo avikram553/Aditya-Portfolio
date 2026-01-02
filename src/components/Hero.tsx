@@ -169,8 +169,23 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="mb-6"
+            className="mb-6 flex flex-col items-center justify-center"
           >
+            {/* Profile Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="mb-4"
+            >
+              <img 
+                src="/profile-picture.jpg"
+                alt="Aditya Vikram"
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-cyan-500 shadow-lg"
+                style={{ filter: 'blur(1.5px)' }}
+              />
+            </motion.div>
+            
             <p className="text-xl sm:text-2xl text-black mb-4 tracking-wider uppercase">
               Senior Software Engineer
             </p>

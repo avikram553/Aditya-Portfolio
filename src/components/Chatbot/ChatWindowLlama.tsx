@@ -137,12 +137,12 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
   return (
     <div className="fixed bottom-24 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col border border-gray-200 z-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-t-2xl flex justify-between items-center">
+      <div className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white p-4 rounded-t-2xl flex justify-between items-center">
         <div>
           <h3 className="font-bold text-lg">ADI - Aditya's AI Assistant</h3>
           <p className="text-xs flex items-center gap-2">
             {backendStatus === 'checking' && '🟡 Checking...'}
-            {backendStatus === 'online' && '🟢 Connected to Mistral 7B AI'}
+            {backendStatus === 'online' && '🟢 Connected to Qwen 2.5 AI'}
             {backendStatus === 'offline' && '🔴 Backend Offline'}
           </p>
         </div>
@@ -163,10 +163,10 @@ const ChatWindowLlama: React.FC<ChatWindowLlamaProps> = ({ isOpen, onClose }) =>
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl px-4 py-3 max-w-[85%] shadow-md">
+            <div className="bg-gradient-to-r from-cyan-500 to-teal-500 text-white rounded-2xl px-4 py-3 max-w-[85%] shadow-md">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm">AI is thinking...</span>
+                <span className="text-sm">ADI is thinking...</span>
               </div>
             </div>
           </div>
